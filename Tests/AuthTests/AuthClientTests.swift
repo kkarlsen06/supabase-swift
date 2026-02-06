@@ -1804,8 +1804,8 @@ final class AuthClientTests: XCTestCase {
   func testMFAUnenroll() async throws {
     Mock(
       url: clientURL.appendingPathComponent("factors/123"),
-      statusCode: 204,
-      data: [.delete: Data(#"{"factor_id":"123"}"#.utf8)]
+      statusCode: 200,
+      data: [.delete: Data(#"{"id":"123"}"#.utf8)]
     )
     .snapshotRequest {
       #"""
@@ -1824,9 +1824,9 @@ final class AuthClientTests: XCTestCase {
 
     Dependencies[sut.clientID].sessionStorage.store(.validSession)
 
-    let factorId = try await sut.mfa.unenroll(params: .init(factorId: "123")).factorId
+    let id = try await sut.mfa.unenroll(params: .init(factorId: "123")).id
 
-    expectNoDifference(factorId, "123")
+    expectNoDifference(id, "123")
   }
 
   func testMFAChallengeAndVerify() async throws {
